@@ -7,7 +7,7 @@
 https://github.com/purcell/color-theme-sanityinc-tomorrow
 
 #+BEGIN_SRC emacs-lisp
-  (load-theme 'sanityinc-tomorrow-eighties)
+  (load-theme 'sanityinc-tomorrow-eighties t)
 #+END_SRC
 
 #+RESULTS:
@@ -229,7 +229,7 @@ helm 可以让你很方便的在项目里快速浏览文件
 
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-  (setq js2-basic-offset 4)
+  (setq js2-basic-offset 2)
   (setq js2-allow-rhino-new-expr-initializer nil)
   (setq js2-enter-indents-newline t)
   (setq js2-global-externs '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON"))
@@ -424,6 +424,115 @@ pallet 可以让你在emacs里安装和卸载的插件同步到 =Cask= file
 (pallet-mode t)
 #+END_SRC
 
+** smartparens
+#+BEGIN_SRC emacs-lisp
+(smartparens-global-mode t)
+
+;; highlights matching pairs
+(show-smartparens-global-mode t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;
+;; keybinding management
+
+(define-key sp-keymap (kbd "C-M-f") 'sp-forward-sexp)
+(define-key sp-keymap (kbd "C-M-b") 'sp-backward-sexp)
+
+(define-key sp-keymap (kbd "C-M-d") 'sp-down-sexp)
+(define-key sp-keymap (kbd "C-M-a") 'sp-backward-down-sexp)
+(define-key sp-keymap (kbd "C-S-a") 'sp-beginning-of-sexp)
+(define-key sp-keymap (kbd "C-S-d") 'sp-end-of-sexp)
+
+(define-key sp-keymap (kbd "C-M-e") 'sp-up-sexp)
+(define-key emacs-lisp-mode-map (kbd ")") 'sp-up-sexp)
+(define-key sp-keymap (kbd "C-M-u") 'sp-backward-up-sexp)
+(define-key sp-keymap (kbd "C-M-t") 'sp-transpose-sexp)
+
+(define-key sp-keymap (kbd "C-M-n") 'sp-next-sexp)
+(define-key sp-keymap (kbd "C-M-p") 'sp-previous-sexp)
+
+(define-key sp-keymap (kbd "C-M-k") 'sp-kill-sexp)
+(define-key sp-keymap (kbd "C-M-w") 'sp-copy-sexp)
+
+(define-key sp-keymap (kbd "M-<delete>") 'sp-unwrap-sexp)
+(define-key sp-keymap (kbd "M-<backspace>") 'sp-backward-unwrap-sexp)
+
+(define-key sp-keymap (kbd "C-<right>") 'sp-forward-slurp-sexp)
+(define-key sp-keymap (kbd "C-<left>") 'sp-forward-barf-sexp)
+(define-key sp-keymap (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
+(define-key sp-keymap (kbd "C-M-<right>") 'sp-backward-barf-sexp)
+
+(define-key sp-keymap (kbd "M-D") 'sp-splice-sexp)
+(define-key sp-keymap (kbd "C-M-<delete>") 'sp-splice-sexp-killing-forward)
+(define-key sp-keymap (kbd "C-M-<backspace>") 'sp-splice-sexp-killing-backward)
+(define-key sp-keymap (kbd "C-S-<backspace>") 'sp-splice-sexp-killing-around)
+
+(define-key sp-keymap (kbd "C-]") 'sp-select-next-thing-exchange)
+(define-key sp-keymap (kbd "C-<left_bracket>") 'sp-select-previous-thing)
+(define-key sp-keymap (kbd "C-M-]") 'sp-select-next-thing)
+
+(define-key sp-keymap (kbd "M-F") 'sp-forward-symbol)
+(define-key sp-keymap (kbd "M-B") 'sp-backward-symbol)
+
+(define-key sp-keymap (kbd "H-t") 'sp-prefix-tag-object)
+(define-key sp-keymap (kbd "H-p") 'sp-prefix-pair-object)
+(define-key sp-keymap (kbd "H-s c") 'sp-convolute-sexp)
+(define-key sp-keymap (kbd "H-s a") 'sp-absorb-sexp)
+(define-key sp-keymap (kbd "H-s e") 'sp-emit-sexp)
+(define-key sp-keymap (kbd "H-s p") 'sp-add-to-previous-sexp)
+(define-key sp-keymap (kbd "H-s n") 'sp-add-to-next-sexp)
+(define-key sp-keymap (kbd "H-s j") 'sp-join-sexp)
+(define-key sp-keymap (kbd "H-s s") 'sp-split-sexp)
+
+;;;;;;;;;;;;;;;;;;
+;; pair management
+
+(sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
+
+;;; markdown-mode
+(sp-with-modes '(markdown-mode gfm-mode rst-mode)
+  (sp-local-pair "*" "*" :bind "C-*")
+  (sp-local-tag "2" "**" "**")
+  (sp-local-tag "s" "```scheme" "```")
+  (sp-local-tag "<"  "<_>" "</_>" :transform 'sp-match-sgml-tags))
+
+;;; tex-mode latex-mode
+(sp-with-modes '(tex-mode plain-tex-mode latex-mode)
+  (sp-local-tag "i" "\"<" "\">"))
+
+;;; html-mode
+(sp-with-modes '(html-mode sgml-mode)
+  (sp-local-pair "<" ">"))
+
+;;; lisp modes
+(sp-with-modes sp--lisp-modes
+  (sp-local-pair "(" nil :bind "C-("))
+#+END_SRC
+
+#+RESULTS:
+| common-lisp-mode         | (:open ( :actions (:add) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add))                                   |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| clojure-mode             | (:open ( :actions (:add) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add))                                   |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| cider-repl-mode          | (:open ( :actions (:add) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add))                                   |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| monroe-mode              | (:open ( :actions (:add) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add))                                   |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| slime-repl-mode          | (:open ( :actions (:add) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add))                                   |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| eshell-mode              | (:open ( :actions (:add) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add))                                   |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| lisp-mode                | (:open ( :actions (:add) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add))                                   |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| geiser-repl-mode         | (:open ( :actions (:add) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add))                                   |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| inferior-scheme-mode     | (:open ( :actions (:add) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add))                                   |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| scheme-interaction-mode  | (:open ( :actions (:add) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add))                                   |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| scheme-mode              | (:open ( :actions (:add) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add))                                   |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| lisp-interaction-mode    | (:open ( :actions (:add) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add))                                   |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| inf-clojure-mode         | (:open ( :actions (:add) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add))                                   |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| inferior-lisp-mode       | (:open ( :actions (:add) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add))                                   |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| inferior-emacs-lisp-mode | (:open ( :actions (:add) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add))                                   |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| emacs-lisp-mode          | (:open ( :actions (:add) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add))                                   |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| sgml-mode                | (:open < :close > :actions (wrap insert autoskip navigate) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add)) |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| html-mode                | (:open < :close > :actions (wrap insert autoskip navigate) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add)) |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| rst-mode                 | (:open * :close * :actions (wrap insert autoskip navigate) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add)) |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| gfm-mode                 | (:open * :close * :actions (wrap insert autoskip navigate) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add)) |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| markdown-mode            | (:open * :close * :actions (wrap insert autoskip navigate) :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add)) |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| minibuffer-inactive-mode | (:open ' :actions nil :when (:add) :unless (:add) :pre-handlers (:add) :post-handlers (:add))                                      |                                                               |                                                               |                                                               |                                                             |                                                             |                                                             |                                                             |                                                             |                                                             |
+| t                        | (:open \\( :close \\) :actions (insert wrap autoskip navigate))                                                                    | (:open \{ :close \} :actions (insert wrap autoskip navigate)) | (:open \( :close \) :actions (insert wrap autoskip navigate)) | (:open \" :close \" :actions (insert wrap autoskip navigate)) | (:open " :close " :actions (insert wrap autoskip navigate)) | (:open ' :close ' :actions (insert wrap autoskip navigate)) | (:open ( :close ) :actions (insert wrap autoskip navigate)) | (:open [ :close ] :actions (insert wrap autoskip navigate)) | (:open { :close } :actions (insert wrap autoskip navigate)) | (:open ` :close ` :actions (insert wrap autoskip navigate)) |
+
 ** sequential-command
 #+BEGIN_SRC emacs-lisp
 (require 'sequential-command)
@@ -497,7 +606,7 @@ See the [[http://ternjs.net/][project homepage]] for more info.
 #+END_SRC
 
 #+RESULTS:
-: textmate-column-down-with-select
+           : textmate-column-down-with-select
 
 ** toodledo
 #+BEGIN_SRC emacs-lisp
@@ -517,7 +626,7 @@ See the [[http://ternjs.net/][project homepage]] for more info.
 #+END_SRC
 
 #+RESULTS:
-| lambda | nil | (local-unset-key ) | (local-set-key d (quote org-toodledo-agenda-mark-task-deleted)) |
+           | lambda | nil | (local-unset-key ) | (local-set-key d (quote org-toodledo-agenda-mark-task-deleted)) |
 
 ** Prompt Behavior
 
@@ -529,18 +638,34 @@ See the [[http://ternjs.net/][project homepage]] for more info.
 #+END_SRC
 
 #+RESULTS:
-| server-kill-buffer-query-function |
+           | server-kill-buffer-query-function |
 
 In [[(y-or-n)][line (y-or-n)]] all "yes" or "no" questions are aliased to "y" or "n". We don't really want to type a full word to answer a question from Emacs
 
 Also Emacs should be able to kill processes without asking ([[(process-query)][line (process-query)]]). Got that snippet from: http://www.masteringemacs.org/articles/2010/11/14/disabling-prompts-emacs/
 
-** web-mode
+** [[http://web-mode.org/][web-mode]]
 #+BEGIN_SRC emacs-lisp
-(require 'editorconfig)
-
+  (require 'editorconfig)
+  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (defun my-web-mode-hook () 
+    "Hooks for Web mode." 
+    (setq web-mode-markup-indent-offset c-basic-offset)
+    (setq web-mode-code-indent-offset c-basic-offset)
+    (setq web-mode-css-indent-offset c-basic-offset)
+    ) 
+  (add-hook 'web-mode-hook 'my-web-mode-hook)
 #+END_SRC
 
 #+RESULTS:
-: editorconfig
+| my-web-mode-hook |
+
+** yasnippet
+#+BEGIN_SRC emacs-lisp
+(yas-global-mode 1)
+#+END_SRC
+
+#+RESULTS:
+: t
 
