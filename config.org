@@ -1,4 +1,13 @@
 #+TITLE: Literal Programming Emacs Configure
+* Install
+安装这个config再容易不过了
+#+BEGIN_SRC sh
+cd ~
+git clone git@github.com:jcouyang/.emacs.d.git
+cd .emacs.d
+cask install
+#+END_SRC
+打开 emacs, 问啥都说 yes, yeah
 
 * Theme
 
@@ -160,23 +169,23 @@ When the completion candidates are shown, press <f1> to display the documentatio
 document
 
 #+BEGIN_SRC emacs-lisp -n -r
-  (require 'company)
-  (add-to-list 'company-backends 'company-dabbrev t)
-  (add-to-list 'company-backends 'company-ispell t)
-  (add-to-list 'company-backends 'company-files t)
-  (add-to-list 'company-backends 'company-css t) (ref:backends)
-  (add-to-list 'company-backends 'company-nxml t)
-  (add-to-list 'company-backends 'company-ropemacs t)
-  (add-to-list 'company-backends 'company-yasnippet t)
-  (add-to-list 'company-backends 'company-tern t)
-  ;; not always down case
-  (setq company-dabbrev-downcase nil)
-  (add-hook 'after-init-hook 'global-company-mode)
+    (require 'company)
+  (require 'company-tern)
+    (add-to-list 'company-backends 'company-tern)
+    (add-to-list 'company-backends 'company-dabbrev t)
+    (add-to-list 'company-backends 'company-ispell t)
+    (add-to-list 'company-backends 'company-files t)
+    (add-to-list 'company-backends 'company-css t) 
+    (add-to-list 'company-backends 'company-yasnippet t)
 
+    ;; not always down case
+    (setq company-dabbrev-downcase nil)
+    (add-hook 'after-init-hook 'global-company-mode)
+  (setq company-tooltip-align-annotations t)
 #+END_SRC
 
 #+RESULTS:
-| global-company-mode |
+: t
 
 ** DONE deft
 #+BEGIN_SRC emacs-lisp
@@ -453,8 +462,7 @@ pallet 可以让你在emacs里安装和卸载的插件同步到 =Cask= file
 (define-key sp-keymap (kbd "C-M-k") 'sp-kill-sexp)
 (define-key sp-keymap (kbd "C-M-w") 'sp-copy-sexp)
 
-(define-key sp-keymap (kbd "M-<delete>") 'sp-unwrap-sexp)
-(define-key sp-keymap (kbd "M-<backspace>") 'sp-backward-unwrap-sexp)
+(define-key sp-keymap (kbd "C-M-<backspace>") 'sp-backward-unwrap-sexp)
 
 (define-key sp-keymap (kbd "C-<right>") 'sp-forward-slurp-sexp)
 (define-key sp-keymap (kbd "C-<left>") 'sp-forward-barf-sexp)
@@ -571,7 +579,7 @@ Needs the =tern= binary to be present, which can be installed with =npm=:
 (bin-file (expand-file-name "../bin/tern" (file-name-directory (file-truename script-file)))))
 #+END_SRC
 
-
+#+BEGIN_SRC
 M-.
     Jump to the definition of the thing under the cursor.
 M-,
@@ -582,6 +590,16 @@ C-c C-c
     Find the type of the thing under the cursor.
 C-c C-d
     Find docs of the thing under the cursor. Press again to open the associated URL (if any).
+
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+(add-hook 'js2-mode-hook (lambda () (tern-mode t)))
+(add-hook 'web-mode-hook (lambda () (tern-mode t)))
+#+END_SRC
+
+#+RESULTS:
+| (lambda nil (tern-mode t)) | my-web-mode-hook |
 
 See the [[http://ternjs.net/][project homepage]] for more info.
 
