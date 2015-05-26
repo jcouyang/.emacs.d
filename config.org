@@ -1,4 +1,7 @@
+
 #+TITLE: Literal Programming Emacs Configure
+#+OPTIONS: H:2
+#+author: Jichao Ouyang
 * Install
 安装这个config再容易不过了
 #+BEGIN_SRC sh
@@ -47,21 +50,34 @@ http://emacsthemes.caisah.info/installed-emacs-themes/
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp -n -r
-  (setq locate-command "mdfind")
-  (setenv "PATH" (concat (getenv "PATH") ":/usr/local/share/npm/bin:/usr/local/bin"))
-  (setq exec-path (append exec-path '("/usr/local/bin")))
-  (add-hook 'local-write-file-hooks
-            (lambda ()
-              (delete-trailing-whitespace)
-              nil))
-  (setq-default
-   tab-width 2
-   indent-tabs-mode nil                   ;use spaces instead of tabs
-   c-basic-offset 2                       ;"tab" with in c-related modes
-   c-hungry-delete-key t                  ;delete more than one space
-   )
 
-  (electric-indent-mode t)
+  (setq tex-compile-commands '(("xelatex %r")))
+  (setq tex-command "xelatex")
+  (setq-default TeX-engine 'xelatex)
+
+  (setq org-latex-pdf-process
+        '("xelatex -interaction nonstopmode -output-directory %o %f"
+          "xelatex -interaction nonstopmode -output-directory %o %f"
+          "xelatex -interaction nonstopmode -output-directory %o %f"))
+    (setq locate-command "mdfind")
+    (setenv "PATH" (concat (getenv "PATH") ":/usr/local/share/npm/bin:/usr/local/bin:/usr/texbin"))
+    (setq exec-path (append exec-path '("/usr/local/bin" "/usr/texbin")))
+    (add-hook 'local-write-file-hooks
+              (lambda ()
+                (delete-trailing-whitespace)
+                nil))
+    (setq-default
+     tab-width 2
+  make-backup-files nil ; stop creating those backup~ file
+  auto-save-default nil
+
+     indent-tabs-mode nil                   ;use spaces instead of tabs
+     c-basic-offset 2                       ;"tab" with in c-related modes
+     c-hungry-delete-key t                  ;delete more than one space
+     electric-pair-mode nil
+     )
+
+    (electric-indent-mode t)
 #+END_SRC
 
 #+RESULTS:
@@ -175,7 +191,7 @@ document
     (add-to-list 'company-backends 'company-dabbrev t)
     (add-to-list 'company-backends 'company-ispell t)
     (add-to-list 'company-backends 'company-files t)
-    (add-to-list 'company-backends 'company-css t) 
+    (add-to-list 'company-backends 'company-css t)
     (add-to-list 'company-backends 'company-yasnippet t)
 
     ;; not always down case
@@ -237,43 +253,46 @@ helm 可以让你很方便的在项目里快速浏览文件
 ** js2-mode
 
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-  (setq js2-basic-offset 2)
-  (setq js2-allow-rhino-new-expr-initializer nil)
-  (setq js2-enter-indents-newline t)
-  (setq js2-global-externs '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON"))
-  (setq js2-idle-timer-delay 0.1)
-  (setq js2-indent-on-enter-key nil)
-  (setq js2-mirror-mode nil)
-  (setq js2-strict-inconsistent-return-warning nil)
-  (setq js2-auto-indent-p t)
-  (setq js2-include-rhino-externs nil)
-  (setq js2-include-gears-externs nil)
-  (setq js2-concat-multiline-strings 'eol)
-  (setq js2-rebind-eol-bol-keys nil)
-  (setq js2-mode-show-parse-errors t)
-  (setq js2-mode-show-strict-warnings t)
+    (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+  (add-to-list 'auto-mode-alist '("\\.sjs$" . js2-mode))
+    (add-to-list 'auto-mode-alist '("\\.es6$" . js2-mode))
+    (setq js2-basic-offset 2)
+    (setq js2-allow-rhino-new-expr-initializer nil)
+    (setq js2-enter-indents-newline t)
+    (setq js2-global-externs '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON"))
+    (setq js2-idle-timer-delay 0.1)
+    (setq js2-indent-on-enter-key nil)
+    (setq js2-mirror-mode nil)
+    (setq js2-strict-inconsistent-return-warning nil)
+    (setq js2-auto-indent-p t)
+    (setq js2-include-rhino-externs nil)
+    (setq js2-include-gears-externs nil)
+    (setq js2-concat-multiline-strings 'eol)
+    (setq js2-rebind-eol-bol-keys nil)
+    (setq js2-mode-show-parse-errors t)
+    (setq js2-mode-show-strict-warnings nil)
 
 #+END_SRC
 
 #+RESULTS:
-: t
 
 Got most of that from [[https://github.com/magnars/.emacs.d/blob/master/setup-js2-mode.el][Magnars' .emacs.d]].
 
 ** json-mode
 
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
-  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+    (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.tag\\'" . web-mode))
 
 
-  (add-hook 'json-mode-hook
-            (lambda ()
-              (setq js-indent-level 2)))
+    (add-hook 'json-mode-hook
+              (lambda ()
+                (setq js-indent-level 2)))
 #+END_SRC
 
 #+RESULTS:
+| lambda | nil | (setq js-indent-level 2) |
 
 =json-mode= adds a bit better syntax highlighting for =.json= files.
 
@@ -573,7 +592,7 @@ C-c C-d
 #+END_SRC
 
 #+RESULTS:
-| (lambda nil (tern-mode t)) | my-web-mode-hook |
+| (lambda nil (tern-mode t)) | my-web-mode-hook | er/add-web-mode-expansions | er/add-html-mode-expansions |
 
 See the [[http://ternjs.net/][project homepage]] for more info.
 
@@ -641,17 +660,17 @@ Also Emacs should be able to kill processes without asking ([[(process-query)][l
   (require 'editorconfig)
   (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  (defun my-web-mode-hook () 
-    "Hooks for Web mode." 
+  (defun my-web-mode-hook ()
+    "Hooks for Web mode."
     (setq web-mode-markup-indent-offset c-basic-offset)
     (setq web-mode-code-indent-offset c-basic-offset)
     (setq web-mode-css-indent-offset c-basic-offset)
-    ) 
+    )
   (add-hook 'web-mode-hook 'my-web-mode-hook)
 #+END_SRC
 
 #+RESULTS:
-| my-web-mode-hook |
+| my-web-mode-hook | er/add-web-mode-expansions | er/add-html-mode-expansions |
 
 ** yasnippet
 #+BEGIN_SRC emacs-lisp
@@ -660,4 +679,3 @@ Also Emacs should be able to kill processes without asking ([[(process-query)][l
 
 #+RESULTS:
 : t
-
