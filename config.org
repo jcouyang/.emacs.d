@@ -398,26 +398,31 @@ Got most of that from [[https://github.com/magnars/.emacs.d/blob/master/setup-js
 - State "DONE"       from ""           [2015-03-10 Tue 23:07]
 :END:
 #+BEGIN_SRC emacs-lisp
-      (setq org-html-validation-link nil)
-      (setq org-publish-project-alist
-            '(("clojure-static"
-               :base-directory "~/Documents/Books/clojure-by-example/manuscript_org"
-               :base-extension "png\\|jpg\\|jpeg"
-               :publishing-directory "~/Documents/Books/clojure-by-example/manuscript"
-               :recursive t
-               :publishing-function org-publish-attachment)
-              ("clojure-md"
-               :base-directory "~/Documents/Books/clojure-by-example/manuscript_org"
-               :base-extension "org"
-               :publishing-directory "~/Documents/Books/clojure-by-example/manuscript"
-               :sub-superscript ""
-               :recursive t
-               :publishing-function org-leanpub-publish-to-leanpub
-               :html-extension "md"
-               :body-only t)
-              ("clojure-book" :components ("clojure-md" "clojure-static"))))
+  (setq org-html-validation-link nil)
+  (setq org-publish-project-alist
+        '(("fpjs-static"
+           :base-directory "~/Documents/Books/functional-javascript/images"
+           :base-extension "png\\|jpg\\|jpeg\\|gif"
+           :publishing-directory "~/Dropbox/functional-javascript/manuscript/images"
+           :recursive t
+           :publishing-function org-publish-attachment)
+          ("fpjs-md"
+           :base-directory "~/Documents/Books/functional-javascript"
+           :base-extension "org"
+           :publishing-directory "~/Dropbox/functional-javascript/manuscript"
+           :sub-superscript ""
+           :recursive t
+           :publishing-function org-leanpub-publish-to-leanpub
+           :html-extension "md"
+           :body-only t)
+          ("fpjs" :components ("fpjs-static" "fpjs-md"))))
 
 #+END_SRC
+
+#+RESULTS:
+| fpjs-static | :base-directory | ~/Documents/Books/functional-javascript/images | :base-extension | png\ | jpg\                  | jpeg\                                      | gif              | :publishing-directory | ~/Dropbox/functional-javascript/manuscript/images | :recursive | t                    | :publishing-function           | org-publish-attachment |    |            |   |
+| fpjs-md     | :base-directory | ~/Documents/Books/functional-javascript        | :base-extension | org  | :publishing-directory | ~/Dropbox/functional-javascript/manuscript | :sub-superscript |                       | :recursive                                        | t          | :publishing-function | org-leanpub-publish-to-leanpub | :html-extension        | md | :body-only | t |
+| fpjs        | :components     | (fpjs-static fpjs-md)                          |                 |      |                       |                                            |                  |                       |                                                   |            |                      |                                |                        |    |            |   |
 
 *** TODO Agenda
 SCHEDULED: <2015-03-18 Wed>
