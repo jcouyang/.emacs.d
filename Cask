@@ -14,6 +14,7 @@
 (depends-on "coffee-mode")
 (depends-on "color-theme-sanityinc-tomorrow")
 (depends-on "company")
+(depends-on "company-emoji")
 (depends-on "company-tern")
 (depends-on "dash")
 (depends-on "dash-functional")

@@ -51,38 +51,47 @@ http://emacsthemes.caisah.info/installed-emacs-themes/
 
 #+BEGIN_SRC emacs-lisp -n -r
 
-  (setq tex-compile-commands '(("xelatex %r")))
-  (setq tex-command "xelatex")
-  (setq-default TeX-engine 'xelatex)
+    (setq tex-compile-commands '(("xelatex %r")))
+    (setq tex-command "xelatex")
+    (setq-default TeX-engine 'xelatex)
 
-  (setq org-latex-pdf-process
-        '("xelatex -interaction nonstopmode -output-directory %o %f"
-          "xelatex -interaction nonstopmode -output-directory %o %f"
-          "xelatex -interaction nonstopmode -output-directory %o %f"))
+    (setq org-latex-pdf-process
+          '("xelatex -interaction nonstopmode -output-directory %o %f"
+            "xelatex -interaction nonstopmode -output-directory %o %f"
+            "xelatex -interaction nonstopmode -output-directory %o %f"))
 
-    (setq locate-command "mdfind")
-    (setenv "PATH" (concat (getenv "PATH") ":/usr/local/share/npm/bin:/usr/local/bin:/usr/texbin"))
-    (setq exec-path (append exec-path '("/usr/local/bin" "/usr/texbin")))
-    (add-hook 'local-write-file-hooks
-              (lambda ()
-                (delete-trailing-whitespace)
-                nil))
-    (setq-default
-     tab-width 2
-  make-backup-files nil ; stop creating those backup~ file
-  auto-save-default nil
+      (setq locate-command "mdfind")
+      (setenv "PATH" (concat (getenv "PATH") ":/usr/local/share/npm/bin:/usr/local/bin:/usr/texbin"))
+      (setq exec-path (append exec-path '("/usr/local/bin" "/usr/texbin")))
+      (add-hook 'local-write-file-hooks
+                (lambda ()
+                  (delete-trailing-whitespace)
+                  nil))
+      (setq-default
+       tab-width 2
+    make-backup-files nil ; stop creating those backup~ file
+    auto-save-default nil
 
-     indent-tabs-mode nil                   ;use spaces instead of tabs
-     c-basic-offset 2                       ;"tab" with in c-related modes
-     c-hungry-delete-key t                  ;delete more than one space
-     electric-pair-mode nil
-     )
-(set-fontset-font "fontset-default" 'han '("PingFang SC"))
-    (electric-indent-mode t)
+       indent-tabs-mode nil                   ;use spaces instead of tabs
+       c-basic-offset 2                       ;"tab" with in c-related modes
+       c-hungry-delete-key t                  ;delete more than one space
+       electric-pair-mode nil
+       )
+  (set-fontset-font "fontset-default" 'han '("PingFang SC"))
+      (electric-indent-mode t)
+  (defun darwin-set-emoji-font (frame)
+  "Adjust the font settings of FRAME so Emacs NS/Cocoa can display emoji properly."
+    (if (eq system-type 'darwin)
+      (set-fontset-font t 'symbol (font-spec :family "Apple Color Emoji") frame 'prepend)))
+  ;; For when emacs is started with Emacs.app
+  (darwin-set-emoji-font nil)
+  ;; Hook for when a cocoa frame is created with emacsclient
+  ;; see https://www.gnu.org/software/emacs/manual/html_node/elisp/Creating-Frames.html
+  (add-hook 'after-make-frame-functions 'darwin-set-emoji-font)
 #+END_SRC
 
 #+RESULTS:
-: t
+| darwin-set-emoji-font | select-frame |
 
 * User Settings
 
@@ -254,24 +263,24 @@ helm 可以让你很方便的在项目里快速浏览文件
 ** js2-mode
 
 #+BEGIN_SRC emacs-lisp
-    (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-  (add-to-list 'auto-mode-alist '("\\.sjs$" . js2-mode))
-    (add-to-list 'auto-mode-alist '("\\.es6$" . js2-mode))
-    (setq js2-basic-offset 2)
-    (setq js2-allow-rhino-new-expr-initializer nil)
-    (setq js2-enter-indents-newline t)
-    (setq js2-global-externs '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON"))
-    (setq js2-idle-timer-delay 0.1)
-    (setq js2-indent-on-enter-key nil)
-    (setq js2-mirror-mode nil)
-    (setq js2-strict-inconsistent-return-warning nil)
-    (setq js2-auto-indent-p t)
-    (setq js2-include-rhino-externs nil)
-    (setq js2-include-gears-externs nil)
-    (setq js2-concat-multiline-strings 'eol)
-    (setq js2-rebind-eol-bol-keys nil)
-    (setq js2-mode-show-parse-errors t)
-    (setq js2-mode-show-strict-warnings nil)
+     (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+   (add-to-list 'auto-mode-alist '("\\.sjs$" . js2-mode))
+     (add-to-list 'auto-mode-alist '("\\.es6$" . js2-mode))
+  (setq js2-basic-offset 4)
+     (setq js2-allow-rhino-new-expr-initializer nil)
+     (setq js2-enter-indents-newline t)
+     (setq js2-global-externs '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON"))
+     (setq js2-idle-timer-delay 0.1)
+     (setq js2-indent-on-enter-key nil)
+     (setq js2-mirror-mode nil)
+     (setq js2-strict-inconsistent-return-warning nil)
+     (setq js2-auto-indent-p t)
+     (setq js2-include-rhino-externs nil)
+     (setq js2-include-gears-externs nil)
+     (setq js2-concat-multiline-strings 'eol)
+     (setq js2-rebind-eol-bol-keys nil)
+     (setq js2-mode-show-parse-errors t)
+     (setq js2-mode-show-strict-warnings nil)
 
 #+END_SRC
 
