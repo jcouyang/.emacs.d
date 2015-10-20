@@ -35,18 +35,19 @@ http://emacsthemes.caisah.info/installed-emacs-themes/
 - Meta key 设为 =Command= （我用的是mac）[[(meta-key)]]
 - 把 =C-h= 映射到 =C-?= ，因为帮助功能不是很有用，但是 =C-h= 这个unix系统下的默认是删除键，使用太频繁了。[[(delete-key)]]
 #+BEGIN_SRC emacs-lisp -n -r
-  (server-start) (ref:server)
-  (global-superword-mode 1)
-  (when (eq system-type 'darwin)
-    (setq mac-option-modifier 'alt)
-    (setq mac-command-modifier 'meta)) (ref:meta-key)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
-  (setq inhibit-startup-message t)
-  (delete-selection-mode 1) ; delete selection when paste
-  (keyboard-translate ?\C-h ?\C-?) (ref:delete-key)
-  (global-auto-revert-mode 1)  ;auto revert buffers when changed on dis
-  (global-prettify-symbols-mode 1)
+    (server-start) ;(ref:server)
+    (global-superword-mode 1)
+    (when (eq system-type 'darwin)
+      (setq mac-option-modifier 'alt)
+      (setq mac-command-modifier 'meta)); (ref:meta-key)
+    (tool-bar-mode -1)
+    (scroll-bar-mode -1)
+    (setq inhibit-startup-message t)
+    (delete-selection-mode 1) ; delete selection when paste
+    (keyboard-translate ?\C-h ?\C-?); (ref:delete-key)
+    (global-auto-revert-mode 1)  ;auto revert buffers when changed on dis
+    (global-prettify-symbols-mode 1)
+  (global-diff-hl-mode)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp -n -r
@@ -180,7 +181,12 @@ Cider 是 clojure 的repl插件
 
 #+BEGIN_SRC emacs-lisp
 (setq org-babel-clojure-backend 'cider)
+(add-hook 'cider-repl-mode-hook #'company-mode)
+(add-hook 'cider-mode-hook #'company-mode)
 #+END_SRC
+
+#+RESULTS:
+| company-mode |
 
 ** DONE company
 - State "DONE"       from ""           [2015-03-09 Mon 22:54]
@@ -215,13 +221,16 @@ document
 
 ** DONE deft
 #+BEGIN_SRC emacs-lisp
-  (setq
-   deft-extension "org"
-   deft-directory "~/Dropbox/org/deft"
-   deft-text-mode 'org-mode
-   deft-use-filename-as-title t
-   )
+    (setq
+     deft-extension "org"
+     deft-directory "~/Dropbox/org/deft"
+     deft-text-mode 'org-mode
+     deft-use-filename-as-title t
+  deft-use-filter-string-for-filename t
+     )
 #+END_SRC
+
+#+RESULTS:
 
 ** IN PROGRESS helm
 - State "IN PROGRESS" from ""           [2015-03-09 Mon 21:46]
@@ -266,7 +275,7 @@ helm 可以让你很方便的在项目里快速浏览文件
      (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
    (add-to-list 'auto-mode-alist '("\\.sjs$" . js2-mode))
      (add-to-list 'auto-mode-alist '("\\.es6$" . js2-mode))
-  (setq js2-basic-offset 4)
+  (setq js2-basic-offset 2)
      (setq js2-allow-rhino-new-expr-initializer nil)
      (setq js2-enter-indents-newline t)
      (setq js2-global-externs '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON"))
@@ -328,6 +337,14 @@ Got most of that from [[https://github.com/magnars/.emacs.d/blob/master/setup-js
   (setq on-screen-highlight-method 'narrow-line)
 #+END_SRC
 
+** key chord
+#+BEGIN_SRC emacs-lisp
+(key-chord-mode 1)
+(setq key-chord-two-keys-delay 0.03)
+#+END_SRC
+
+#+RESULTS:
+: 0.03
 
 ** TODO org
 
@@ -682,17 +699,11 @@ Also Emacs should be able to kill processes without asking ([[(process-query)][l
   (require 'editorconfig)
   (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  (defun my-web-mode-hook ()
-    "Hooks for Web mode."
-    (setq web-mode-markup-indent-offset c-basic-offset)
-    (setq web-mode-code-indent-offset c-basic-offset)
-    (setq web-mode-css-indent-offset c-basic-offset)
-    )
-  (add-hook 'web-mode-hook 'my-web-mode-hook)
+  
 #+END_SRC
 
 #+RESULTS:
-| my-web-mode-hook | er/add-web-mode-expansions | er/add-html-mode-expansions |
+| my-web-mode-hook | (lambda nil (tern-mode t)) |
 
 ** yasnippet
 #+BEGIN_SRC emacs-lisp
