@@ -62,7 +62,7 @@ http://emacsthemes.caisah.info/installed-emacs-themes/
             "xelatex -interaction nonstopmode -output-directory %o %f"))
 
       (setq locate-command "mdfind")
-      (setenv "PATH" (concat (getenv "PATH") ":/usr/local/share/npm/bin:/usr/local/bin:/usr/texbin"))
+     (setenv "PATH" (concat (getenv "PATH") ":/usr/local/share/npm/bin:/usr/local/bin:/usr/texbin"))
       (setq exec-path (append exec-path '("/usr/local/bin" "/usr/texbin")))
       (add-hook 'local-write-file-hooks
                 (lambda ()
@@ -231,6 +231,7 @@ document
 #+END_SRC
 
 #+RESULTS:
+: t
 
 ** IN PROGRESS helm
 - State "IN PROGRESS" from ""           [2015-03-09 Mon 21:46]
@@ -269,31 +270,45 @@ helm 可以让你很方便的在项目里快速浏览文件
   (require 'iedit)
   (setq iedit-unmatched-lines-invisible-default t)
 #+END_SRC
-** js2-mode
 
+** flycheck
 #+BEGIN_SRC emacs-lisp
-     (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-   (add-to-list 'auto-mode-alist '("\\.sjs$" . js2-mode))
-     (add-to-list 'auto-mode-alist '("\\.es6$" . js2-mode))
-  (setq js2-basic-offset 2)
-     (setq js2-allow-rhino-new-expr-initializer nil)
-     (setq js2-enter-indents-newline t)
-     (setq js2-global-externs '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON"))
-     (setq js2-idle-timer-delay 0.1)
-     (setq js2-indent-on-enter-key nil)
-     (setq js2-mirror-mode nil)
-     (setq js2-strict-inconsistent-return-warning nil)
-     (setq js2-auto-indent-p t)
-     (setq js2-include-rhino-externs nil)
-     (setq js2-include-gears-externs nil)
-     (setq js2-concat-multiline-strings 'eol)
-     (setq js2-rebind-eol-bol-keys nil)
-     (setq js2-mode-show-parse-errors t)
-     (setq js2-mode-show-strict-warnings nil)
-
+  (require 'flycheck)
+  ;;(add-hook 'after-init-hook #'global-flycheck-mode)
+  (setq-default flycheck-disabled-checkers
+                (append flycheck-disabled-checkers
+                        '(javascript-jshint)))
+  (setq-default flycheck-disabled-checkers
+                (append flycheck-disabled-checkers
+                        '(json-jsonlist)))
 #+END_SRC
 
 #+RESULTS:
+| javascript-jshint | json-jsonlist | javascript-jshint | json-jsonlist |
+
+** js2-mode
+
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+  (add-to-list 'auto-mode-alist '("\\.sjs$" . js2-mode))
+  (add-to-list 'auto-mode-alist '("\\.es6$" . js2-mode))
+  (setq js2-basic-offset 2)
+  (setq js2-allow-rhino-new-expr-initializer nil)
+  (setq js2-enter-indents-newline t)
+  (setq js2-global-externs '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON"))
+  (setq js2-idle-timer-delay 0.1)
+  (setq js2-indent-on-enter-key nil)
+  (setq js2-mirror-mode nil)
+  (setq js2-strict-inconsistent-return-warning nil)
+  (setq js2-auto-indent-p t)
+  (setq js2-include-rhino-externs nil)
+  (setq js2-include-gears-externs nil)
+  (setq js2-concat-multiline-strings 'eol)
+  (setq js2-rebind-eol-bol-keys nil)
+  (setq js2-mode-show-parse-errors t)
+  (setq js2-mode-show-strict-warnings nil)
+
+#+END_SRC
 
 Got most of that from [[https://github.com/magnars/.emacs.d/blob/master/setup-js2-mode.el][Magnars' .emacs.d]].
 
@@ -389,9 +404,30 @@ Got most of that from [[https://github.com/magnars/.emacs.d/blob/master/setup-js
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'org-structure-template-alist '("E" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC\n"))
   (add-to-list 'org-structure-template-alist '("S" "#+BEGIN_SRC shell-script\n?\n#+END_SRC\n"))
-  (add-to-list 'org-structure-template-alist '("J" "#+BEGIN_SRC javascript\n?\n#+END_SRC\n"))
+  (add-to-list 'org-structure-template-alist '("J" "#+BEGIN_SRC js\n?\n#+END_SRC\n"))
   (add-to-list 'org-structure-template-alist '("C" "#+BEGIN_SRC clojure\n?\n#+END_SRC\n"))
 #+END_SRC
+
+#+RESULTS:
+| J | #+BEGIN_SRC js\n?\n#+END_SRC\n           |                                        |
+| C | #+BEGIN_SRC clojure\n?\n#+END_SRC\n      |                                        |
+| J | #+BEGIN_SRC javascript\n?\n#+END_SRC\n   |                                        |
+| S | #+BEGIN_SRC shell-script\n?\n#+END_SRC\n |                                        |
+| E | #+BEGIN_SRC emacs-lisp\n?\n#+END_SRC\n   |                                        |
+| s | #+BEGIN_SRC ?\n\n#+END_SRC               | <src lang="?">\n\n</src>               |
+| e | #+BEGIN_EXAMPLE\n?\n#+END_EXAMPLE        | <example>\n?\n</example>               |
+| q | #+BEGIN_QUOTE\n?\n#+END_QUOTE            | <quote>\n?\n</quote>                   |
+| v | #+BEGIN_VERSE\n?\n#+END_VERSE            | <verse>\n?\n</verse>                   |
+| V | #+BEGIN_VERBATIM\n?\n#+END_VERBATIM      | <verbatim>\n?\n</verbatim>             |
+| c | #+BEGIN_CENTER\n?\n#+END_CENTER          | <center>\n?\n</center>                 |
+| l | #+BEGIN_LaTeX\n?\n#+END_LaTeX            | <literal style="latex">\n?\n</literal> |
+| L | #+LaTeX:                                 | <literal style="latex">?</literal>     |
+| h | #+BEGIN_HTML\n?\n#+END_HTML              | <literal style="html">\n?\n</literal>  |
+| H | #+HTML:                                  | <literal style="html">?</literal>      |
+| a | #+BEGIN_ASCII\n?\n#+END_ASCII            |                                        |
+| A | #+ASCII:                                 |                                        |
+| i | #+INDEX: ?                               | #+INDEX: ?                             |
+| I | #+INCLUDE: %file ?                       | <include file=%file markup="?">        |
 
 *** DONE Capture
 :LOGBOOK:
@@ -483,6 +519,17 @@ SCHEDULED: <2015-03-18 Wed>
 
 #+RESULTS:
 | todo-state-up | priority-down | category-keep |
+
+*** babel
+#+BEGIN_SRC emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((js . t)
+     (clojure . t)
+     ))
+#+END_SRC
+
+#+RESULTS:
 
 ** pallet
 
